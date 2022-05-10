@@ -11,13 +11,12 @@ func main() {
 	// environment
 	arg := "dev"
 	config.Loads("./" + arg + ".env")
+	connectDB := db.InitConnectionDB()
+	defer connectDB.Close()
 	config.SetEnv(config.EnvData)
 	env := config.GetEnvValue()
 	app := gin.Default()
+	_ = app.SetTrustedProxies(nil)
 	routerUser.InitRouter(app)
-	if err := db.InitDb(); err != nil {
-		panic(err)
-	}
 	_ = app.Run(env.Server.Host + ":" + env.Server.Port) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
-

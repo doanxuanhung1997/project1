@@ -1,59 +1,34 @@
 package db
 
 import (
-	"context"
-	"fmt"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"os"
+	"github.com/go-pg/pg/v10"
 	"houze_ops_backend/config"
-	"sync"
+	"log"
+	"os"
 )
 
 var (
-	db     *mongo.Database
-	client *mongo.Client
-	ct     = context.Background()
-	err    error
-	once   sync.Once
+	connectDB *pg.DB
 )
 
-func GetContext() context.Context {
-	return ct
-}
-
-func GetClient() *mongo.Client {
-	return client
-}
-
-func GetDatabase() *mongo.Database {
-	return db
-}
-
-func InitDb() error {
-	once.Do(func() {
-		env := config.GetEnvValue()
-		ctx := context.Background()
-		// Options to the database.
-		clientOpts := options.Client().ApplyURI(env.Database.Host)
-		client, err := mongo.Connect(ctx, clientOpts)
-		if err != nil {
-			panic(err)
-		}
-
-		err = client.Ping(ctx, nil)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-
-		db = client.Database(env.Database.Name)
-		fmt.Println("database name:  " + db.Name())
+func InitConnectionDB() *pg.DB {
+	env := config.GetEnvValue()
+	connectDB = pg.Connect(&pg.Options{
+		User:     env.Database.User,
+		Password: env.Database.Password,
+		Addr:     env.Database.Host + ":" + env.Database.Port,
+		Database: env.Database.Name,
 	})
-	return err
+	if connectDB == nil {
+		log.Printf("Failed to connect")
+		os.Exit(100)
+	} else {
+		log.Printf("Connected to db")
+	}
+	return connectDB
 }
 
-// Collection returns database
-func Collection(collection string) *mongo.Collection {
-	return db.Collection(collection)
+// return database connection
+func GetConnectionDB() *pg.DB {
+	return connectDB
 }

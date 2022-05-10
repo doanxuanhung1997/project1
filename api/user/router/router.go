@@ -6,9 +6,9 @@ import (
 )
 
 func InitRouter(app *gin.Engine) {
-	r := app.Group("/api/v1/user")
+	r := app.Group("api/user")
 	{
-		r.POST("/send-otp-code", controllers.Create())
+		r.GET("/test", controllers.Create())
 		r.POST("/resend-otp-code", controllers.Login())
 	}
 }

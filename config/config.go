@@ -34,7 +34,7 @@ type config struct {
 type database struct {
 	Name     string
 	Host     string
-	Port     int
+	Port     string
 	User     string
 	Password string
 }
