@@ -3,10 +3,10 @@ package common
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"math/rand"
-	"regexp"
 	"houze_ops_backend/config"
 	"houze_ops_backend/helpers/constant"
+	"math/rand"
+	"regexp"
 	"time"
 	"unicode/utf8"
 )
@@ -32,7 +32,7 @@ func GenerateNumber(n int) string {
 	return string(b)
 }
 
-//hash password from user
+//hash password from sys_user
 func HashPassword(pass string) string {
 	env := config.GetEnvValue()
 	mixPass := pass + env.Secret.Salt
@@ -74,4 +74,8 @@ func CheckSpecialCharacters(value string) bool {
 		return true
 	}
 	return false
+}
+
+func GetDateTimeNow() time.Time {
+	return time.Now().UTC()
 }

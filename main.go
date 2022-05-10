@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	routerUser "houze_ops_backend/api/user/router"
+	routerUser "houze_ops_backend/api/sys_user/router"
 	"houze_ops_backend/config"
 	"houze_ops_backend/db"
 )
