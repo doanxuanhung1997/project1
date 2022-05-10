@@ -7,14 +7,11 @@ import (
 )
 
 const (
-	CollectionUsers             = "users"
-	CollectionCoupons           = "coupons"
-	CollectionCouponsUser       = "coupons_user"
-	CollectionListenersBookmark = "listeners_bookmark"
+	CollectionSysUser = "sys_user"
 )
 
-/*User Model*/
-type User struct {
+//SysUser Model
+type SysUser struct {
 	Id               primitive.ObjectID   `json:"id,omitempty" bson:"_id,omitempty"`
 	PhoneNumber      string               `json:"phone_number" bson:"phone_number"`
 	Name             string               `json:"name" bson:"name"`
@@ -34,27 +31,4 @@ type User struct {
 	UpdatedAt        time.Time            `json:"updated_at" bson:"updated_at"`
 	DeletedFlag      bool                 `json:"deleted_flag" bson:"deleted_flag"`
 	CountReferral    int                  `json:"count_referral" bson:"count_referral"`
-}
-
-/*ListenersBookmark Model*/
-type ListenersBookmark struct {
-	Id           primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
-	UserId       string             `json:"user_id" bson:"user_id"`
-	ListenerId   string             `json:"listener_id" bson:"listener_id"`
-	ListenerRole int                `json:"listener_role" bson:"listener_role"`
-	CreatedAt    time.Time          `json:"created_at" bson:"created_at"`
-	UpdatedAt    time.Time          `json:"updated_at" bson:"updated_at"`
-}
-
-/*CouponsUser Model*/
-type CouponsUser struct {
-	Id        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
-	UserId    string             `json:"user_id" bson:"user_id"`
-	Name      string             `json:"name" bson:"name"`
-	Status    string             `json:"status" bson:"status"` //ACTIVE, INACTIVE, USED
-	Discount  float64            `json:"discount" bson:"discount"`
-	Type      string             `json:"type" bson:"type"` // cp_call_now, cp_booking_cg, cp_booking_cv
-	ExpiresAt time.Time          `json:"expires_at" bson:"expires_at"`
-	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
-	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
 }

@@ -6,7 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"os"
-	"sandexcare_backend/helpers/config"
+	"houze_ops_backend/config"
 	"sync"
 )
 

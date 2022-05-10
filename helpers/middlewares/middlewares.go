@@ -2,19 +2,12 @@ package middlewares
 
 import (
 	"errors"
-	"fmt"
-	"net/url"
-	listenerRepository "sandexcare_backend/api/listener/repository"
-	userRepository "sandexcare_backend/api/user/repository"
-	"sandexcare_backend/helpers/config"
-	"sandexcare_backend/helpers/constant"
-	"sandexcare_backend/helpers/message"
-	"strings"
-	"time"
-
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
+	"net/url"
+	"houze_ops_backend/config"
+	"strings"
+	"time"
 )
 
 type Claims struct {
@@ -133,22 +126,6 @@ func AuthenticateToken(c *gin.Context) (data TokenInfo, err error) {
 		return data, errTK
 	}
 
-	if claims.PhoneNumber == "" {
-		return data, errors.New(message.InvalidToken)
-	}
-	// check account disabled
-	if claims.Role == constant.RoleUser {
-		user, _ := userRepository.PublishInterfaceUser().GetUserById(claims.Id)
-		if user.Status != constant.Active || user.DeletedFlag {
-			return data, errors.New(message.MessageErrorAccountInacctive)
-		}
-	} else {
-		listener, _ := listenerRepository.PublishInterfaceListener().GetListenerByListenerId(claims.Id)
-		if listener.Status != constant.Active || listener.DeletedFlag {
-			return data, errors.New(message.MessageErrorAccountInacctive)
-		}
-
-	}
 	data.Id = claims.Id
 	data.PhoneNumber = claims.PhoneNumber
 	data.Email = claims.Email
@@ -169,49 +146,11 @@ func GetInfoByToken(token string) (data TokenInfo, err error) {
 		return data, errTK
 	}
 
-	// check account disabled
-	if claims.Role == constant.RoleUser {
-		user, _ := userRepository.PublishInterfaceUser().GetUserById(claims.Id)
-		if user.Status != constant.Active || user.DeletedFlag {
-			return data, errors.New(message.MessageErrorAccountInacctive)
-		}
-	} else {
-		listener, _ := listenerRepository.PublishInterfaceListener().GetListenerByListenerId(claims.Id)
-		if listener.Status != constant.Active || listener.DeletedFlag {
-			return data, errors.New(message.MessageErrorAccountInacctive)
-		}
-	}
 	data.Id = claims.Id
 	data.PhoneNumber = claims.PhoneNumber
 	data.Email = claims.Email
 	data.Role = claims.Role
 	return data, nil
-}
-
-//
-func GetIDByRefreshToken(c *gin.Context) (userID, signature string, err error) {
-	token, err := JwtFromHeader(c, "Authorization")
-	logrus.Error(token)
-	if err != nil {
-		logrus.Error(err)
-		return "", "", err
-	}
-	t := strings.Split(token, ".")
-	if len(t) != 3 {
-		fmt.Print(len(t))
-		return "", "", errors.New("invalid refresh-token")
-	}
-	signature = t[2]
-	var claims Claims
-	var jwtKey = []byte(config.GetSecret())
-	tkn, errTK := jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
-	})
-
-	if errTK != nil || !tkn.Valid {
-		return "", "", errors.New("invalid refresh-token")
-	}
-	return claims.Id, signature, nil
 }
 
 //Logout

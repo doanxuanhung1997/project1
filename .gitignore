@@ -11,7 +11,7 @@
 # Test binary, built with `go test -c`
 *.test
 *.log
-# 
+#
 *.out
 *.config
 *.xml
@@ -20,9 +20,3 @@
 *.jpeg
 # Dependency directories (remove the comment below to include it)
 build/
-swag
-chat
-# Test binary, built with `go test -c`
-*.test
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out

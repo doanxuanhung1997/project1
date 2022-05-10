@@ -3,10 +3,8 @@ package mail
 import (
 	"fmt"
 	"net/smtp"
-	"sandexcare_backend/helpers/config"
-	"sandexcare_backend/helpers/constant"
+	"houze_ops_backend/config"
 	"strconv"
-	"strings"
 )
 
 const (
@@ -61,63 +59,3 @@ func SendEmail(to string, title string, content string) (bool, error) {
 	return true, nil
 }
 
-func GetHtmlContentCreateListener(roleId int, phoneNumber string, password string) string {
-	receiver := UserRequest
-	switch roleId {
-	case constant.RoleListener:
-		receiver = ListenerRequest
-		break
-	case constant.RoleExperts:
-		receiver = ExpertsRequest
-	default:
-		break
-	}
-	emailTemplate := GetMailFromDb(TypeCreateListener)
-	replacer := strings.NewReplacer("{receiver}", receiver, "{phone_number}", phoneNumber, "{password}", password)
-	emailTemplate = replacer.Replace(emailTemplate)
-	return emailTemplate
-}
-
-func GetHtmlContentResetPassword(roleId int, phoneNumber string, code string) string {
-	receiver := UserRequest
-	switch roleId {
-	case constant.RoleListener:
-		receiver = ListenerRequest
-		break
-	case constant.RoleExperts:
-		receiver = ExpertsRequest
-	default:
-		break
-	}
-	emailTemplate := GetMailFromDb(TypeForgotPassword)
-	replacer := strings.NewReplacer("{receiver}", receiver, "{phone_number}", phoneNumber, "{code}", code)
-	emailTemplate = replacer.Replace(emailTemplate)
-	return emailTemplate
-}
-
-func GetHtmlContentBlockListener() string {
-	emailTemplate := GetMailFromDb(TypeNotifyBlockListener)
-	return emailTemplate
-}
-
-func GetMailFromDb(typeEmail string) string {
-	/*Get template from db*/
-	emailDb := NewResource().GetEmailTemplate(typeEmail)
-	return emailDb.Template
-}
-
-/*Get email subject with type corresponding*/
-func GetSubject(typeTemplate string) (subject string) {
-	switch typeTemplate {
-	case TypeForgotPassword:
-		subject = "Request a password reset"
-		break
-	case TypeCreateListener:
-		subject = "Create account successful"
-		break
-	case TypeNotifyBlockListener:
-		subject = "Blocked account"
-		break
-	}
-	return subject
-}
