@@ -1,0 +1,22 @@
+# Remove migrations files
+.idea/
+#go.mod
+#go.sum
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+# Test binary, built with `go test -c`
+*.test
+*.log
+#
+*.out
+*.config
+*.xml
+*.env
+*.png
+*.jpeg
+# Dependency directories (remove the comment below to include it)
+build/

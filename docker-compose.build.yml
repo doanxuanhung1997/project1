@@ -1,0 +1,8 @@
+version: "3.6"
+
+services:
+  houze-ops-api:
+    image: "t7gregistrycore.azurecr.io/houze-ops-api:${TAG:-latest}"
+    build:
+      context: ./src
+      dockerfile: Dockerfile
